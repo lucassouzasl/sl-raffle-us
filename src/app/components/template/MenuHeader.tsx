@@ -12,6 +12,8 @@ export default function MenuHeader() {
                         <li><MenuHeaderItem icone={IconTool} texto="Sorteio" url="/sorteio" /></li>
                         <li><MenuHeaderItem icone={IconTools} texto="Upload" url="/upload" /></li>
                         <li><MenuHeaderItem icone={IconReport} texto="Resumo" url="/resumo" /></li>
+                        <li><MenuHeaderItem icone={IconReport} texto="Prêmio" url="/premios" /></li>
+                        <li><MenuHeaderItem icone={IconReport} texto="Empresa" url="/empresas" /></li>
                     </ul>
                 </nav>
             </div>

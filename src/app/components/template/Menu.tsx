@@ -10,6 +10,8 @@ export default function Menu() {
                 <MenuItem icone={IconTool} texto="Sorteio" url="/sorteio" />
                 <MenuItem icone={IconTools} texto="Upload" url="/upload" />
                 <MenuItem icone={IconReport} texto="Resumo" url="/report" />
+                <MenuItem icone={IconReport} texto="Prêmio" url="/premios" />
+                <MenuItem icone={IconReport} texto="Empresa" url="/empresas" />
             </nav>
         </aside>
     )

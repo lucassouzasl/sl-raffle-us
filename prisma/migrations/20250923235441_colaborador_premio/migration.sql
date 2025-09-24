@@ -1,0 +1,36 @@
+-- CreateTable
+CREATE TABLE "Empresa" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "nome" TEXT NOT NULL DEFAULT '',
+    "empresa" TEXT NOT NULL DEFAULT '',
+    "observacao" TEXT NOT NULL DEFAULT '',
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "published" BOOLEAN NOT NULL DEFAULT true
+);
+
+-- CreateTable
+CREATE TABLE "Premio" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "nome" TEXT NOT NULL DEFAULT '',
+    "observacao" TEXT NOT NULL DEFAULT '',
+    "tipo" INTEGER NOT NULL DEFAULT 0,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "published" BOOLEAN NOT NULL DEFAULT true
+);
+
+-- CreateTable
+CREATE TABLE "ColaboradorPremio" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "colaboradorId" INTEGER NOT NULL,
+    "premioId" INTEGER NOT NULL,
+    "nome" TEXT NOT NULL DEFAULT '',
+    "observacao" TEXT NOT NULL DEFAULT '',
+    "tipo" INTEGER NOT NULL DEFAULT 0,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "published" BOOLEAN NOT NULL DEFAULT true,
+    CONSTRAINT "ColaboradorPremio_colaboradorId_fkey" FOREIGN KEY ("colaboradorId") REFERENCES "Colaborador" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "ColaboradorPremio_premioId_fkey" FOREIGN KEY ("premioId") REFERENCES "Premio" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
