@@ -15,6 +15,20 @@ import excluirColaborador from './colaborador/excluirColaborador'
 import excluirColaboradores from './colaborador/excluirColaboradores'
 import criarVarios from './colaborador/criarVarios'
 
+import salvarPremio from './premio/salvarPremio'
+import criarPremio from './premio/criarPremio'
+import todosPremios from './premio/obterTodos'
+import excluirPremio from './premio/excluirPremio'
+
+import salvarEmpresa from './empresa/salvarEmpresa'
+import criarEmpresa from './empresa/criarEmpresa'
+import todasEmpresas from './empresa/obterTodas'
+import excluirEmpresa from './empresa/excluirEmpresa'
+
+import salvarColaboradorPremio from './colaboradorpremio/salvarColaboradorPremio'
+import todosColaboradorPremios from './colaboradorpremio/obterTodos'
+import excluirColaboradorPremio from './colaboradorpremio/excluirColaboradorPremio'
+
 // Padrão Facade
 export default class Backend {
     static readonly usuarios = {
@@ -35,5 +49,22 @@ export default class Backend {
         ganhadores: todosGanhadores,
         resumoGanhou: resumoGanhou,
         resumoExtra: resumoExtra,
+    }
+    static readonly premios = {
+        salvar: salvarPremio,
+        criar: criarPremio,
+        obter: todosPremios,
+        excluir: excluirPremio,
+    }
+    static readonly empresas = {
+        salvar: salvarEmpresa,
+        criar: criarEmpresa,
+        obter: todasEmpresas,
+        excluir: excluirEmpresa,
+    }
+    static readonly colaboradorPremios = {
+        salvar: salvarColaboradorPremio,
+        obter: todosColaboradorPremios,
+        excluir: excluirColaboradorPremio,
     }
 }
