@@ -58,10 +58,7 @@ export default class Backend {
     }
     static readonly empresas = {
         salvar: salvarEmpresa,
-<<<<<<< HEAD
-=======
         criar: criarEmpresa,
->>>>>>> 251d87eeb5e51a5464956f91fe8761ad8764745c
         obter: todasEmpresas,
         excluir: excluirEmpresa,
     }
