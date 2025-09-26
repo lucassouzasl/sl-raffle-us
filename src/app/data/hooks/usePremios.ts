@@ -18,6 +18,14 @@ export default function usePremios() {
         setPremio(null)
     }
 
+    async function criar() {
+        if (!premio) return;
+        await Backend.premios.criar(premio);
+        const premios = await Backend.premios.obter();
+        setPremios(premios);
+        setPremio(null);
+    }
+
     async function excluir() {
         if (!premio || !premio.id) return
         await Backend.premios.excluir(premio.id)
@@ -29,9 +37,11 @@ export default function usePremios() {
     return {
         premios,
         premio,
+        criar,
         salvar,
         excluir,
         cancelar: () => setPremio(null),
         alterarPremio: (premio: Partial<Premio> | null) => setPremio(premio),
+        criarPremio: (premio: Partial<Premio> | null) => setPremio(premio),
     }
 }

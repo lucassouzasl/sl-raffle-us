@@ -4,6 +4,7 @@ import InputTexto from '../shared/InputTexto'
 export interface FormularioEmpresaProps {
     registro: Partial<Empresa>
     onChange: (registro: Partial<Empresa>) => void
+    criar: () => void
     salvar: () => void
     cancelar: () => void
     excluir: () => void
@@ -32,9 +33,14 @@ export default function FormalarioEmpresa(props: FormularioEmpresaProps) {
             />
             <div className="flex justify-between">
                 <div className="flex gap-5">
-                    <button className="bg-blue-500 px-4 py-2 rounded-md" onClick={props.salvar}>
-                        Salvar
-                    </button>
+                    {props.registro.id ? (
+                        <button className="bg-blue-500 px-4 py-2 rounded-md" onClick={props.salvar}>
+                            Salvar
+                        </button>) : (
+                        <button className="bg-red-500 px-4 py-2 rounded-md" onClick={props.criar}>
+                            Criar
+                        </button>
+                    )}
                     <button className="bg-zinc-500 px-4 py-2 rounded-md" onClick={props.cancelar}>
                         Cancelar
                     </button>

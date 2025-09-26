@@ -8,7 +8,7 @@ import usePremios from '@/app/data/hooks/usePremios'
 
 export default function Page() {
 
-    const { premio, premios, salvar, excluir, alterarPremio } = usePremios()
+    const { premio, premios, criar, salvar, excluir, alterarPremio } = usePremios()
 
     return (
         <Pagina className="flex flex-col gap-10">
@@ -19,6 +19,7 @@ export default function Page() {
                     registro={premio}
                     onChange={alterarPremio}
                     salvar={salvar}
+                    criar={criar}
                     cancelar={() => alterarPremio(null)}
                     excluir={excluir}
                 />

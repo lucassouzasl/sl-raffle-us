@@ -8,7 +8,7 @@ import useEmpresas from '@/app/data/hooks/useEmpresas'
 
 export default function Page() {
 
-    const { empresa, empresas, salvar, excluir, alterarEmpresa } = useEmpresas()
+    const { empresa, empresas, criar, salvar, excluir, alterarEmpresa } = useEmpresas()
 
     return (
         <Pagina className="flex flex-col gap-10">
@@ -19,6 +19,7 @@ export default function Page() {
                     registro={empresa}
                     onChange={alterarEmpresa}
                     salvar={salvar}
+                    criar={criar}
                     cancelar={() => alterarEmpresa(null)}
                     excluir={excluir}
                 />

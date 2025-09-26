@@ -6,8 +6,7 @@ import RepositorioPremio from './RepositorioPremio'
 
 export default async function salvarUsuario(premio: Partial<Premio>) {
     const novoPremio = {
-        ...premio,
-        id: premio.id ?? Id.novo,
+        ...premio
     }
 
     return RepositorioPremio.salvar(novoPremio as Premio)

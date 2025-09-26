@@ -16,10 +16,12 @@ import excluirColaboradores from './colaborador/excluirColaboradores'
 import criarVarios from './colaborador/criarVarios'
 
 import salvarPremio from './premio/salvarPremio'
+import criarPremio from './premio/criarPremio'
 import todosPremios from './premio/obterTodos'
 import excluirPremio from './premio/excluirPremio'
 
 import salvarEmpresa from './empresa/salvarEmpresa'
+import criarEmpresa from './empresa/criarEmpresa'
 import todasEmpresas from './empresa/obterTodas'
 import excluirEmpresa from './empresa/excluirEmpresa'
 
@@ -50,11 +52,16 @@ export default class Backend {
     }
     static readonly premios = {
         salvar: salvarPremio,
+        criar: criarPremio,
         obter: todosPremios,
         excluir: excluirPremio,
     }
     static readonly empresas = {
         salvar: salvarEmpresa,
+<<<<<<< HEAD
+=======
+        criar: criarEmpresa,
+>>>>>>> 251d87eeb5e51a5464956f91fe8761ad8764745c
         obter: todasEmpresas,
         excluir: excluirEmpresa,
     }
