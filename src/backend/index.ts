@@ -26,6 +26,7 @@ import todasEmpresas from './empresa/obterTodas'
 import excluirEmpresa from './empresa/excluirEmpresa'
 
 import salvarColaboradorPremio from './colaboradorpremio/salvarColaboradorPremio'
+import criarColaboradorPremio from './colaboradorpremio/criarColaboradorPremio'
 import todosColaboradorPremios from './colaboradorpremio/obterTodos'
 import excluirColaboradorPremio from './colaboradorpremio/excluirColaboradorPremio'
 
@@ -64,6 +65,7 @@ export default class Backend {
     }
     static readonly colaboradorPremios = {
         salvar: salvarColaboradorPremio,
+        criar: criarColaboradorPremio,
         obter: todosColaboradorPremios,
         excluir: excluirColaboradorPremio,
     }

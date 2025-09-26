@@ -3,6 +3,8 @@ import { IconTool } from "@tabler/icons-react";
 import Pagina from "@/app/components/template/Pagina";
 import Titulo from "@/app/components/template/Titulo";
 import useColaboladores from "@/app/data/hooks/userColaboladores";
+import useEmpresas from "@/app/data/hooks/useEmpresas";
+import usePremios from "@/app/data/hooks/usePremios";
 import { useContext, useEffect, useState } from "react";
 import MyReusableSelect from "@/app/components/shared/MyReusableSelect";
 import { RaffleContext } from "@/contexts/raffleContext";
@@ -17,16 +19,21 @@ export default function Page() {
 
   const [tipo, setTipo] = useState("0");
   const [empresa, setEmpresa] = useState("");
+  const [premio, setPremio] = useState("");
   const [loading, setLoading] = useState(false);
 
   const { colaboradores, sortear, ganhador, newGanhador } = useColaboladores();
+
+  const { empresas } = useEmpresas();
+
+  const { premios } = usePremios();
 
   const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
   const colabs = colaboradores.filter((item) => {
     if (tipo == "0") {
       return item.empresa.toLowerCase().startsWith(empresa.toLowerCase()) && item.observacao == "";
-    } 
+    }
     return item.empresa.toLowerCase().startsWith(empresa.toLowerCase()) && item.premio == "";
   });
 
@@ -35,7 +42,7 @@ export default function Page() {
     raffle.onChangeLoading(true);
     newGanhador();
     await delay(3000);
-    sortear(tipo, empresa, WITHOUT_SUP);
+    sortear(tipo, empresa, premio, WITHOUT_SUP);
     setLoading(false);
     raffle.onChangeLoading(false);
   };
@@ -45,32 +52,26 @@ export default function Page() {
     { value: "1", label: "Extra" },
   ];
 
-  const empresas = [
-    { value: "",    label: "Todas" },
-    { value: "SLL", label: "Londrina" },
-    { value: "SLM", label: "Mauá" },
-    { value: "SP",  label: "Sementes" },
-    { value: "ND",  label: "Nordeste" },
-    { value: "JD",  label: "Jundiai" },
+  const empresas_base = [
+    { value: "", label: "Todas" }
   ];
 
+  const novasEmpresas = empresas.map((item) => ({
+    value: item.empresa,
+    label: item.nome,
+  }));
+
+  const empresas_tmp = [...empresas_base, ...novasEmpresas];
+
+  const premios_tmp = premios.map((item) => ({
+    value: "" + item.id,
+    label: item.nome,
+  }));
+
   const trataEmpresa = (empresa: string) => {
-    if (empresa == "SLL") {
-        return "Londrina"
-    }
-    if (empresa === "SLM") {
-        return "Mauá"
-    }
-    if (empresa === "JD") {
-        return "São Paulo"
-    }
-    if (empresa === "ND") {
-        return "Nordeste"
-    }
-    if (empresa === "SP") {
-        return "Sementes Paraná"
-    }
-    return ""
+    const resultado = empresas.find(item => item.empresa === empresa);
+    const nomeEncontrado = resultado ? resultado.nome : "";
+    return nomeEncontrado;
   }
 
   useEffect(() => {
@@ -103,19 +104,27 @@ export default function Page() {
             </div>
             <div className="mt-5">
               <MyReusableSelect
+                label="Prêmio"
+                value={premio}
+                onChange={(newValue) => setPremio(newValue)}
+                placeholder="Prêmio"
+                options={premios_tmp}
+              />
+            </div>
+            <div className="mt-5">
+              <MyReusableSelect
                 label="Empresa"
                 value={empresa}
                 onChange={(newValue) => setEmpresa(newValue)}
                 placeholder="Grupo"
-                options={empresas}
+                options={empresas_tmp}
               />
             </div>
             {colabs.length > 0 && (
               <div className="flex flex-col gap-3">
                 <button
-                  className={`flex items-center gap-2 bg-gray-500 ${
-                    loading ? "opacity-80 cursor-wait" : ""
-                  } px-4 py-2 rounded-md`}
+                  className={`flex items-center gap-2 bg-gray-500 ${loading ? "opacity-80 cursor-wait" : ""
+                    } px-4 py-2 rounded-md`}
                   disabled={loading}
                   onClick={() => handleSorteio()}
                 >

@@ -1,12 +1,13 @@
 
-import { Colaborador } from '@/core/model/Colaborador'
+import { ColaboradorTmp } from '@/core/model/ColaboradorTmp'
+import { ColaboradorPremio } from '@/core/model/ColaboradorPremio'
 import InputTexto from '../shared/InputTexto'
 import ReusableCheck from "../shared/ReusableCheck";
 import { IconTrash } from '@tabler/icons-react'
 
 export interface FormularioColaboradorProps {
-    colaborador: Partial<Colaborador>
-    onChange: (colaborador: Partial<Colaborador>) => void
+    colaborador: Partial<ColaboradorTmp>
+    onChange: (colaborador: Partial<ColaboradorTmp>) => void
     salvar: () => void
     criar: () => void
     cancelar: () => void
@@ -73,20 +74,20 @@ export default function FormularioColaborador(props: FormularioColaboradorProps)
                     label="Tipo"
                     type="checkbox"
                     checked={(props.colaborador.tipo == 1 ? true : false)}
-                    onChange={(e) => props.onChange?.({ ...props.colaborador, tipo: (e.target.checked == true ? 1 : 0)})}
-                    />
+                    onChange={(e) => props.onChange?.({ ...props.colaborador, tipo: (e.target.checked == true ? 1 : 0) })}
+                />
                 <ReusableCheck
                     label="Flag"
                     type="checkbox"
                     checked={(props.colaborador.flag == 1 ? true : false)}
-                    onChange={(e) => props.onChange?.({ ...props.colaborador, flag: (e.target.checked == true ? 1 : 0)})}
-                    />
+                    onChange={(e) => props.onChange?.({ ...props.colaborador, flag: (e.target.checked == true ? 1 : 0) })}
+                />
                 <ReusableCheck
                     label="Supervisor"
                     type="checkbox"
                     checked={(props.colaborador.supervisor == 1 ? true : false)}
-                    onChange={(e) => props.onChange?.({ ...props.colaborador, supervisor: (e.target.checked == true ? 1 : 0)})}
-                    />
+                    onChange={(e) => props.onChange?.({ ...props.colaborador, supervisor: (e.target.checked == true ? 1 : 0) })}
+                />
             </div>
             <div className="grid grid-cols-2 gap-5">
                 <div>
@@ -114,22 +115,31 @@ export default function FormularioColaborador(props: FormularioColaboradorProps)
             </div>
             <div className="flex justify-between">
                 <div className="flex gap-5">
-                    { props.colaborador.id ? (
-                    <button className="bg-blue-500 px-4 py-2 rounded-md" onClick={props.salvar}>
-                        Salvar
-                    </button> ) : (
-                    <button className="bg-red-500 px-4 py-2 rounded-md" onClick={props.criar}>
-                        Criar
-                    </button>
+                    {props.colaborador.id ? (
+                        <button className="bg-blue-500 px-4 py-2 rounded-md" onClick={props.salvar}>
+                            Salvar
+                        </button>) : (
+                        <button className="bg-red-500 px-4 py-2 rounded-md" onClick={props.criar}>
+                            Criar
+                        </button>
                     )}
                     <button className="bg-zinc-500 px-4 py-2 rounded-md" onClick={props.cancelar}>
                         Cancelar
                     </button>
                 </div>
-                { props.colaborador.id ? (
-                <button className="bg-red-500 px-4 py-2 rounded-md" onClick={props.excluir}>
-                    Excluir
-                </button> ) : ( '' )}
+                {props.colaborador.id ? (
+                    <button className="bg-red-500 px-4 py-2 rounded-md" onClick={props.excluir}>
+                        Excluir
+                    </button>) : ('')}
+            </div>
+            <div className="flex justify-between bg-slate-400">
+                <br />
+                <ul>
+                    {props.colaborador.premios?.map((colaboradorPremio: ColaboradorPremio) => {
+                        return <li key={colaboradorPremio.id}>X{colaboradorPremio.premioId}</li>
+                    })}
+                </ul>
+                <br />
             </div>
         </div>
     )

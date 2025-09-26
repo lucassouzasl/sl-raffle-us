@@ -1,5 +1,6 @@
 import Backend from '@/backend'
 import { Empresa } from '@/core/model/Empresa'
+import { ValueLabel } from '@/core/model/ValueLabel'
 import { useEffect, useState } from 'react'
 
 export default function useEmpresas() {

@@ -52,8 +52,8 @@ export default function useColaboradores() {
     setGanhadoresE(winnersE);
   }
 
-  async function sortear(tipo: string, empresa: string, supervisor: number) {
-    
+  async function sortear(tipo: string, empresa: string, premio: string, supervisor: number) {
+
     let id: number = 0,
       nome: string = "",
       min: number = 1,
@@ -61,24 +61,24 @@ export default function useColaboradores() {
       random: number = 0,
       icont: number = 0;
 
-      const colabs = colaboradores.filter((item) => {
-        if (supervisor == 0) {
-          if (tipo == "0") {
-            return item.empresa.toLowerCase().startsWith(empresa.toLowerCase()) && item.observacao == "" && item.supervisor == 0;
-          } 
-          return item.empresa.toLowerCase().startsWith(empresa.toLowerCase()) && item.premio == "" && item.supervisor == 0;
-        } else {
-          if (tipo == "0") {
-            return item.empresa.toLowerCase().startsWith(empresa.toLowerCase()) && item.observacao == "";
-          } 
-          return item.empresa.toLowerCase().startsWith(empresa.toLowerCase()) && item.premio == "";
+    const colabs = colaboradores.filter((item) => {
+      if (supervisor == 0) {
+        if (tipo == "0") {
+          return item.empresa.toLowerCase().startsWith(empresa.toLowerCase()) && item.observacao == "" && item.supervisor == 0;
         }
-      });
+        return item.empresa.toLowerCase().startsWith(empresa.toLowerCase()) && item.premio == "" && item.supervisor == 0;
+      } else {
+        if (tipo == "0") {
+          return item.empresa.toLowerCase().startsWith(empresa.toLowerCase()) && item.observacao == "";
+        }
+        return item.empresa.toLowerCase().startsWith(empresa.toLowerCase()) && item.premio == "";
+      }
+    });
 
-      max = colabs.length - 1,
+    max = colabs.length - 1,
       random = Math.floor(Math.random() * (+max - +min) + +min),
 
-    setGanhador(<Colaborador>{});
+      setGanhador(<Colaborador>{});
     colabs.map((colaborador: Colaborador) => {
       if (icont == random) {
         nome = colaborador.nome;
@@ -92,8 +92,10 @@ export default function useColaboradores() {
     if (icont > 0) {
       if (tipo == "0") {
         await Backend.colaboladores.salvar({ id: id, observacao: "GANHOU" });
+        await Backend.colaboradorPremios.criar({ colaboradorId: id, premioId: parseInt(premio) })
       } else {
         await Backend.colaboladores.salvar({ id: id, premio: "EXTRA" });
+        await Backend.colaboradorPremios.criar({ colaboradorId: id, premioId: parseInt(premio) })
       }
       const colaboradores = await Backend.colaboladores.obter();
       setColaboradores(colaboradores);

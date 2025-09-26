@@ -14,7 +14,7 @@ export default function Page() {
 
     const { colaborador, colaboradores, salvar, criar, excluir, criarColaborador, alterarColaborador } = useColaboladores()
 
-    const colabs = colaboradores.filter((item) => { 
+    const colabs = colaboradores.filter((item) => {
         return item.nome.toLowerCase().includes(busca.toLowerCase()) || item.observacao.toLowerCase().startsWith(busca.toLowerCase()) || item.premio.toLowerCase().startsWith(busca.toLowerCase())
     });
 
@@ -46,8 +46,8 @@ export default function Page() {
                         label="Buscar"
                         type="text"
                         value={busca}
-                        onChange={(e) => setBusca(e.target.value) }
-                    />           
+                        onChange={(e) => setBusca(e.target.value)}
+                    />
                     <ListaColaborador colaboradores={colabs} onClick={alterarColaborador} />
                 </>
             )}

@@ -12,6 +12,10 @@ export default class RepositorioEmpresa {
         })
     }
 
+    static async criar(registro: ColaboradorPremio): Promise<ColaboradorPremio> {
+        return await this.db.colaboradorPremio.create({ data: registro });
+    }
+
     static async obterTodos(): Promise<ColaboradorPremio[]> {
         return await this.db.colaboradorPremio.findMany()
     }
