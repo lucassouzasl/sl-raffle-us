@@ -12,6 +12,7 @@ export default function usePremios() {
 
     async function salvar() {
         if (!premio) return
+        delete premio.ColaboradorPremio;
         await Backend.premios.salvar(premio)
         const premios = await Backend.premios.obter()
         setPremios(premios)
@@ -20,6 +21,7 @@ export default function usePremios() {
 
     async function criar() {
         if (!premio) return;
+        delete premio.ColaboradorPremio;
         await Backend.premios.criar(premio);
         const premios = await Backend.premios.obter();
         setPremios(premios);

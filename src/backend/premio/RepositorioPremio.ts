@@ -17,11 +17,26 @@ export default class RepositorioPremio {
     }
 
     static async obterTodos(): Promise<Premio[]> {
-        return await this.db.premio.findMany()
+        return await this.db.premio.findMany({
+            include: {
+                ColaboradorPremio: {
+                    include: {
+                        colaborador: true,
+                    },
+                },
+            },
+        })
     }
 
     static async obterPorId(id: number): Promise<Premio> {
         const premio = await this.db.premio.findUnique({
+            include: {
+                ColaboradorPremio: {
+                    include: {
+                        colaborador: true,
+                    },
+                },
+            },
             where: { id },
         })
         return premio as Premio

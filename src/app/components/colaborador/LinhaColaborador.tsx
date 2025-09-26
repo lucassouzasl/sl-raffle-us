@@ -44,10 +44,9 @@ export default function LinhaColaborador(props: LinhaColaboradorProps) {
             <div className="flex flex-col">
                 <span className="text-xl font-black">{props.colaborador.nome}</span>
                 <div className="flex flex-row gap-3">
-                    {props.colaborador.observacao &&
-                    <span className="text-sm text-green-500 font-bold text-">{props.colaborador.observacao}</span>}
-                    {props.colaborador.premio &&
-                    <span className="text-sm text-yellow-500 font-bold text-">{props.colaborador.premio}</span>}
+                    {Array.isArray(props.colaborador.premios) && props.colaborador.premios?.length > 0 && (
+                        <span className="text-sm text-green-500 font-bold text-">Ganhou&nbsp;{props.colaborador.premios?.length}&nbsp;prêmio(s)</span>
+                    )}
                 </div>
                 <div><span className="mr-2 text-sm text-orange-200 font-bold">{trataColaborador(props.colaborador.situacao)}</span><span className="text-sm text-zinc-200 font-bold">{trataEmpresa(props.colaborador.empresa)}</span></div>
             </div>

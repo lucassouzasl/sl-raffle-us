@@ -93,22 +93,27 @@ export default function Page() {
       <div className="flex flex-row justify-start">
         <div className="grid grid-flow-row auto-rows-max md:auto-rows-min">
           <div className="flex flex-col gap-10">
-            <div className="mb-10">
-              <MyReusableSelect
-                label="Tipo"
-                value={tipo}
-                onChange={(newValue: string) => setTipo(newValue)}
-                placeholder="Tipo"
-                options={tipos}
-              />
-            </div>
-            <div className="mt-5">
+            <div className="mb-5">
               <MyReusableSelect
                 label="Prêmio"
                 value={premio}
                 onChange={(newValue) => setPremio(newValue)}
                 placeholder="Prêmio"
                 options={premios_tmp}
+              />
+              {premio.length <= 0 && (
+                <div className="flex flex-col gap-3">
+                  <div className="text-sm text-yellow-200 ps-2 mt-2"><span>SELECIONE UM PRÊMIO!</span></div>
+                </div>
+              )}
+            </div>
+            <div className="mb-5">
+              <MyReusableSelect
+                label="Tipo"
+                value={tipo}
+                onChange={(newValue: string) => setTipo(newValue)}
+                placeholder="Tipo"
+                options={tipos}
               />
             </div>
             <div className="mt-5">
@@ -120,7 +125,7 @@ export default function Page() {
                 options={empresas_tmp}
               />
             </div>
-            {colabs.length > 0 && (
+            {colabs.length > 0 && premio.length > 0 && (
               <div className="flex flex-col gap-3">
                 <button
                   className={`flex items-center gap-2 bg-gray-500 ${loading ? "opacity-80 cursor-wait" : ""

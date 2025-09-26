@@ -4,6 +4,7 @@ import { ValueLabel } from '@/core/model/ValueLabel'
 import { useEffect, useState } from 'react'
 
 export default function useEmpresas() {
+    const [empresas_tmp, setEmpresasTmp] = useState<ValueLabel[]>([])
     const [empresas, setEmpresas] = useState<Empresa[]>([])
     const [empresa, setEmpresa] = useState<Partial<Empresa> | null>(null)
 

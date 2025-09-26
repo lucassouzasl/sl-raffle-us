@@ -27,6 +27,8 @@ export default function useColaboradores() {
 
   async function salvar() {
     if (!colaborador) return;
+    //colaborador.premios = [];
+    delete colaborador.premios;
     await Backend.colaboladores.salvar(colaborador);
     const colaboradores = await Backend.colaboladores.obter();
     setColaboradores(colaboradores);
@@ -91,10 +93,10 @@ export default function useColaboradores() {
 
     if (icont > 0) {
       if (tipo == "0") {
-        await Backend.colaboladores.salvar({ id: id, observacao: "GANHOU" });
+        //await Backend.colaboladores.salvar({ id: id, observacao: "GANHOU" });
         await Backend.colaboradorPremios.criar({ colaboradorId: id, premioId: parseInt(premio) })
       } else {
-        await Backend.colaboladores.salvar({ id: id, premio: "EXTRA" });
+        //await Backend.colaboladores.salvar({ id: id, premio: "EXTRA" });
         await Backend.colaboradorPremios.criar({ colaboradorId: id, premioId: parseInt(premio) })
       }
       const colaboradores = await Backend.colaboladores.obter();
@@ -123,6 +125,7 @@ export default function useColaboradores() {
 
   async function criar() {
     if (!colaborador) return;
+    delete colaborador.premios;
     await Backend.colaboladores.criar(colaborador);
     const colaboradores = await Backend.colaboladores.obter();
     setColaboradores(colaboradores);

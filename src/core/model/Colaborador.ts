@@ -1,3 +1,4 @@
+import { ColaboradorPremio } from "./ColaboradorPremio"
 
 export interface Colaborador {
     id: number
@@ -16,4 +17,5 @@ export interface Colaborador {
     createdAt: Date
     updatedAt: Date
     published: boolean
+    premios?: ColaboradorPremio[]
 }

@@ -1,13 +1,15 @@
 
-import { ColaboradorTmp } from '@/core/model/ColaboradorTmp'
+import { Colaborador } from '@/core/model/Colaborador'
 import { ColaboradorPremio } from '@/core/model/ColaboradorPremio'
 import InputTexto from '../shared/InputTexto'
 import ReusableCheck from "../shared/ReusableCheck";
 import { IconTrash } from '@tabler/icons-react'
+import ListaPremio from '@/app/components/colaborador/ListaPremio'
+import useColaboladorPremio from '@/app/data/hooks/useColaboradorPremio'
 
 export interface FormularioColaboradorProps {
-    colaborador: Partial<ColaboradorTmp>
-    onChange: (colaborador: Partial<ColaboradorTmp>) => void
+    colaborador: Partial<Colaborador>
+    onChange: (colaborador: Partial<Colaborador>) => void
     salvar: () => void
     criar: () => void
     cancelar: () => void
@@ -15,6 +17,9 @@ export interface FormularioColaboradorProps {
 }
 
 export default function FormularioColaborador(props: FormularioColaboradorProps) {
+
+    const { excluirPremio } = useColaboladorPremio()
+
     const handleClick = () => {
         props.onChange?.({ ...props.colaborador, observacao: '' })
     }
@@ -132,15 +137,13 @@ export default function FormularioColaborador(props: FormularioColaboradorProps)
                         Excluir
                     </button>) : ('')}
             </div>
-            <div className="flex justify-between bg-slate-400">
-                <br />
-                <ul>
-                    {props.colaborador.premios?.map((colaboradorPremio: ColaboradorPremio) => {
-                        return <li key={colaboradorPremio.id}>X{colaboradorPremio.premioId}</li>
-                    })}
-                </ul>
-                <br />
-            </div>
+            {Array.isArray(props.colaborador.premios) && props.colaborador.premios?.length > 0 && (
+                <ListaPremio colaboradoresPremio={props.colaborador.premios} onClick={excluirPremio} />
+            )}
         </div>
     )
 }
+function useColaboladores(): { excluirPremio: any; } {
+    throw new Error('Function not implemented.');
+}
+

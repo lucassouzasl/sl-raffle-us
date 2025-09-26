@@ -6,15 +6,17 @@ export default class RepositorioColaborador {
   private static db: PrismaClient = new PrismaClient();
 
   static async salvar(colaborador: Colaborador): Promise<Colaborador> {
+    const { premios, ...colaboradorData } = colaborador;
     return await this.db.colaborador.upsert({
       where: { id: colaborador.id },
-      update: colaborador,
-      create: colaborador,
+      update: colaboradorData,
+      create: colaboradorData,
     });
   }
 
   static async criar(colaborador: Colaborador): Promise<Colaborador> {
-    return await this.db.colaborador.create({ data: colaborador });
+    const { premios, ...colaboradorData } = colaborador;
+    return await this.db.colaborador.create({ data: colaboradorData });
   }
 
   static async criarVarios(colabs: Partial<Colaborador>[]): Promise<String> {
@@ -32,11 +34,26 @@ export default class RepositorioColaborador {
   }
 
   static async todosColaboradores(): Promise<Colaborador[]> {
-      return await this.db.colaborador.findMany({});
+    return await this.db.colaborador.findMany({
+      include: {
+        premios: {
+          include: {
+            premio: true,
+          },
+        },
+      },
+    });
   }
 
   static async todosNaoGanhadores(): Promise<Colaborador[]> {
     return await this.db.colaborador.findMany({
+      include: {
+        premios: {
+          include: {
+            premio: true,
+          },
+        },
+      },
       where: {
         observacao: "",
         supervisor: 0,
@@ -46,6 +63,13 @@ export default class RepositorioColaborador {
 
   static async todosGanhadores(): Promise<Colaborador[]> {
     return await this.db.colaborador.findMany({
+      include: {
+        premios: {
+          include: {
+            premio: true,
+          },
+        },
+      },
       where: {
         observacao: "GANHOU",
       },
@@ -54,6 +78,14 @@ export default class RepositorioColaborador {
 
   static async todosPremioExtra(): Promise<Colaborador[]> {
     return await this.db.colaborador.findMany({
+      include: {
+        premios: {
+          include: {
+            premio: true,
+          },
+        },
+      },
+
       where: {
         premio: "EXTRA",
       },
