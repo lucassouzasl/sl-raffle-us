@@ -3,6 +3,7 @@ import { ColaboradorPremio } from "./ColaboradorPremio"
 export interface Premio {
     id: number
     nome: string
+    empresa: string
     observacao: string
     tipo: number
     createdAt: Date

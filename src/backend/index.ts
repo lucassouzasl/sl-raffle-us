@@ -18,6 +18,7 @@ import criarVarios from './colaborador/criarVarios'
 import salvarPremio from './premio/salvarPremio'
 import criarPremio from './premio/criarPremio'
 import todosPremios from './premio/obterTodos'
+import todosLivres from './premio/obterLivres'
 import excluirPremio from './premio/excluirPremio'
 
 import salvarEmpresa from './empresa/salvarEmpresa'
@@ -55,6 +56,7 @@ export default class Backend {
         salvar: salvarPremio,
         criar: criarPremio,
         obter: todosPremios,
+        livres: todosLivres,
         excluir: excluirPremio,
     }
     static readonly empresas = {

@@ -55,8 +55,7 @@ export default class RepositorioColaborador {
         },
       },
       where: {
-        observacao: "",
-        supervisor: 0,
+        premios: { none: {} }
       },
     });
   }
@@ -71,7 +70,7 @@ export default class RepositorioColaborador {
         },
       },
       where: {
-        observacao: "GANHOU",
+        premios: { some: {} },        
       },
     });
   }
@@ -96,9 +95,7 @@ export default class RepositorioColaborador {
     const retorno = await this.db.colaborador.groupBy({
       by: ['empresa'],
       where: {
-        observacao: {
-          contains: 'GANHOU',
-        },
+        premios: { some: {} },
       },
       _count: {
         empresa: true
@@ -142,7 +139,6 @@ export default class RepositorioColaborador {
   }
 
   static async removeAllColaboradores(): Promise<void> {
-    console.log("removeAllColaboradores...");
     await this.db.colaborador.deleteMany({});
   }
 }

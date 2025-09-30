@@ -5,15 +5,17 @@ export default class RepositorioPremio {
     private static db: PrismaClient = new PrismaClient()
 
     static async salvar(premio: Premio): Promise<Premio> {
+        const { ColaboradorPremio, ...premioData } = premio;
         return await this.db.premio.upsert({
             where: { id: premio.id },
-            update: premio,
-            create: premio,
+            update: premioData,
+            create: premioData,
         })
     }
 
     static async criar(registro: Premio): Promise<Premio> {
-        return await this.db.premio.create({ data: registro });
+        const { ColaboradorPremio, ...premioData } = registro;
+        return await this.db.premio.create({ data: premioData });
     }
 
     static async obterTodos(): Promise<Premio[]> {
@@ -24,6 +26,28 @@ export default class RepositorioPremio {
                         colaborador: true,
                     },
                 },
+            },
+        })
+    }
+
+    static async obterLivres(): Promise<Premio[]> {
+        return await this.db.premio.findMany({
+            include: {
+                ColaboradorPremio: {
+                    include: {
+                        colaborador: true,
+                    },
+                },
+            },
+            where: {
+                OR: [
+                    {
+                        ColaboradorPremio: { none: {} },        
+                    },
+                    {
+                        tipo: 1
+                    }
+                ]
             },
         })
     }

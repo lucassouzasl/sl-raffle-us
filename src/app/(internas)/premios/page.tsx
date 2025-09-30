@@ -5,23 +5,28 @@ import ListaPremio from '@/app/components/premio/ListaPremio'
 import Pagina from '@/app/components/template/Pagina'
 import Titulo from '@/app/components/template/Titulo'
 import usePremios from '@/app/data/hooks/usePremios'
+import useEmpresas from '@/app/data/hooks/useEmpresas'
 
 export default function Page() {
 
-    const { premio, premios, criar, salvar, excluir, alterarPremio } = usePremios()
+    const { premio, premios, criar, salvar, excluir, excluirColaborador, alterarPremio } = usePremios()
 
+    const { empresas } = useEmpresas();
+    
     return (
         <Pagina className="flex flex-col gap-10">
-            <Titulo icone={IconUser} principal="Prêmios" segundario="Festa SL Alimentos 2024" />
+            <Titulo icone={IconUser} principal="Prêmios" segundario="Festa SL Alimentos 2025" />
 
             {premio ? (
                 <FormularioPremio
                     registro={premio}
+                    empresas={empresas}
                     onChange={alterarPremio}
                     salvar={salvar}
                     criar={criar}
                     cancelar={() => alterarPremio(null)}
                     excluir={excluir}
+                    excluirColaborador={excluirColaborador}
                 />
             ) : (
                 <>
@@ -34,7 +39,7 @@ export default function Page() {
                             <span>Novo Premio</span>
                         </button>
                     </div>
-                    <ListaPremio registros={premios} onClick={alterarPremio} />
+                    <ListaPremio registros={premios} onClick={alterarPremio} empresas={empresas} />
                 </>
             )}
         </Pagina>

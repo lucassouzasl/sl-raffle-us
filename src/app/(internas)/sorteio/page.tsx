@@ -1,5 +1,5 @@
 "use client";
-import { IconTool } from "@tabler/icons-react";
+import { IconTool, IconReload } from "@tabler/icons-react";
 import Pagina from "@/app/components/template/Pagina";
 import Titulo from "@/app/components/template/Titulo";
 import useColaboladores from "@/app/data/hooks/userColaboladores";
@@ -9,6 +9,8 @@ import { useContext, useEffect, useState } from "react";
 import MyReusableSelect from "@/app/components/shared/MyReusableSelect";
 import { RaffleContext } from "@/contexts/raffleContext";
 import { ExternalLink } from "lucide-react";
+import { Colaborador } from "@/core/model/Colaborador";
+import { Premio } from "@/core/model/Premio";
 import Link from "next/link";
 
 export default function Page() {
@@ -17,53 +19,63 @@ export default function Page() {
 
   const raffle = useContext(RaffleContext);
 
-  const [tipo, setTipo] = useState("0");
-  const [empresa, setEmpresa] = useState("");
   const [premio, setPremio] = useState("");
+
   const [loading, setLoading] = useState(false);
 
-  const { colaboradores, sortear, ganhador, newGanhador } = useColaboladores();
+  const [sorteado, setSorteado] = useState(false);
+
+  const { colaboradores, sortear, ganhador, newGanhador, livres } = useColaboladores();
+
+  const [colabs, setColabs] = useState<Colaborador[]>([]);
 
   const { empresas } = useEmpresas();
 
-  const { premios } = usePremios();
-
   const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
-  const colabs = colaboradores.filter((item) => {
-    if (tipo == "0") {
-      return item.empresa.toLowerCase().startsWith(empresa.toLowerCase()) && item.observacao == "";
+  const handlePremio = async (newValue: string) => {
+    setSorteado(false)
+    const premioX = livres.find(item => item.id === parseInt(newValue));
+    setColabs(colaboradores.filter((item) => {
+      if (item.empresa == premioX?.empresa) {
+        if (Array.isArray(item.premios) && item.premios.length > 0) {
+          const premioZ = item.premios.find(item => item.premioId === parseInt(newValue));
+          if (!premioZ) {
+            return item;
+          }
+        } else {
+          return item;
+        }
+      }
+    }));
+    setPremio(newValue);
+  }
+
+  const handleSortearNovamente = async () => {
+    const colabX = colaboradores.find(item => item.id === ganhador().id);
+    if (colabX) {
+      if (Array.isArray(colabX.premios) && colabX.premios.length > 0) {
+          const premioZ = colabX.premios.find(item => item.premioId === parseInt(premio));
+          console.log(colabX.id, premioZ?.id, premio);
+      }
     }
-    return item.empresa.toLowerCase().startsWith(empresa.toLowerCase()) && item.premio == "";
-  });
+  }
 
   const handleSorteio = async () => {
     setLoading(true);
     raffle.onChangeLoading(true);
     newGanhador();
-    await delay(3000);
-    sortear(tipo, empresa, premio, WITHOUT_SUP);
+    await delay(1000); //3000);
+    const premioX = livres.find(item => item.id === parseInt(premio));
+    sortear("" + premioX?.tipo || "0", premioX?.empresa || "", premio, WITHOUT_SUP);
+    setSorteado(true)
+    setPremio("")
+    setColabs([])
     setLoading(false);
     raffle.onChangeLoading(false);
   };
 
-  const tipos = [
-    { value: "0", label: "Normal" },
-    { value: "1", label: "Extra" },
-  ];
-
-  const empresas_base = [
-    { value: "", label: "Todas" }
-  ];
-
-  const novasEmpresas = empresas.map((item) => ({
-    value: item.empresa,
-    label: item.nome,
-  }));
-
-  const empresas_tmp = [...empresas_base, ...novasEmpresas];
-
-  const premios_tmp = premios.map((item) => ({
+  const premios_tmp = livres.map((item) => ({
     value: "" + item.id,
     label: item.nome,
   }));
@@ -75,7 +87,7 @@ export default function Page() {
   }
 
   useEffect(() => {
-    raffle.onChangeWinner(ganhador());
+    //raffle.onChangeWinner(ganhador());
   }, [ganhador, raffle]);
 
   return (
@@ -84,7 +96,7 @@ export default function Page() {
         <Titulo
           icone={IconTool}
           principal="Sorteio"
-          segundario="Festa SL Alimentos 2024"
+          segundario="Festa SL Alimentos 2025"
         />
         <Link href={"/raffle"} target="_blank">
           <ExternalLink size={22} />
@@ -94,39 +106,24 @@ export default function Page() {
         <div className="grid grid-flow-row auto-rows-max md:auto-rows-min">
           <div className="flex flex-col gap-10">
             <div className="mb-5">
+              {premios_tmp.length > 0 && (
               <MyReusableSelect
                 label="Prêmio"
                 value={premio}
-                onChange={(newValue) => setPremio(newValue)}
+                onChange={(newValue) => handlePremio(newValue)}
                 placeholder="Prêmio"
                 options={premios_tmp}
               />
-              {premio.length <= 0 && (
+              )}
+              {premio.length <= 0 && premios_tmp.length > 0 && (
                 <div className="flex flex-col gap-3">
-                  <div className="text-sm text-yellow-200 ps-2 mt-2"><span>SELECIONE UM PRÊMIO!</span></div>
+                  <div className="text-sm text-yellow-400 ps-2 mt-2"><span>SELECIONE UM PRÊMIO!</span></div>
                 </div>
               )}
             </div>
-            <div className="mb-5">
-              <MyReusableSelect
-                label="Tipo"
-                value={tipo}
-                onChange={(newValue: string) => setTipo(newValue)}
-                placeholder="Tipo"
-                options={tipos}
-              />
-            </div>
-            <div className="mt-5">
-              <MyReusableSelect
-                label="Empresa"
-                value={empresa}
-                onChange={(newValue) => setEmpresa(newValue)}
-                placeholder="Grupo"
-                options={empresas_tmp}
-              />
-            </div>
-            {colabs.length > 0 && premio.length > 0 && (
               <div className="flex flex-col gap-3">
+                {colabs.length > 0 && premio.length > 0 && (
+                <>
                 <button
                   className={`flex items-center gap-2 bg-gray-500 ${loading ? "opacity-80 cursor-wait" : ""
                     } px-4 py-2 rounded-md`}
@@ -135,9 +132,10 @@ export default function Page() {
                 >
                   <span>Sortear</span>
                 </button>
-                <div className="text-sm ps-2"><span>Faltam {colabs.length}</span></div>
+                <div className="text-sm ps-2"><span>Falta(m) {colabs.length} colaborador(es)</span></div>
+                </>
+                )}
               </div>
-            )}
           </div>
         </div>
         <div className="w-full justify-items-center pt-20">
@@ -149,6 +147,16 @@ export default function Page() {
                     <span className="text-xl font-black">{ganhador().nome}</span>
                     <span className="text-sm text-zinc-400">{ganhador().funcao}</span>
                     <span className="text-sm text-zinc-400">{trataEmpresa(ganhador().empresa)}</span>
+                    {sorteado && (
+                    <div className="mt-3">
+                      <button
+                        className={`flex items-start gap-2 bg-yellow-400 px-1 py-1 rounded-md`}
+                        onClick={() => handleSortearNovamente()}
+                      >
+                        <IconReload />
+                      </button>
+                    </div>
+                    )}
                   </div>
                 </div>
               </div>

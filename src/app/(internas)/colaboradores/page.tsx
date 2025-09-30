@@ -7,12 +7,15 @@ import Titulo from '@/app/components/template/Titulo'
 import useColaboladores from '@/app/data/hooks/userColaboladores'
 import { useState } from 'react'
 import InputTexto from '@/app/components/shared/InputTexto'
+import useEmpresas from '@/app/data/hooks/useEmpresas'
 
 export default function Page() {
 
     const [busca, setBusca] = useState('')
 
-    const { colaborador, colaboradores, salvar, criar, excluir, criarColaborador, alterarColaborador } = useColaboladores()
+    const { colaborador, colaboradores, salvar, criar, excluir, excluirPremio, criarColaborador, alterarColaborador } = useColaboladores()
+
+    const { empresas } = useEmpresas();
 
     const colabs = colaboradores.filter((item) => {
         return item.nome.toLowerCase().includes(busca.toLowerCase()) || item.observacao.toLowerCase().startsWith(busca.toLowerCase()) || item.premio.toLowerCase().startsWith(busca.toLowerCase())
@@ -20,16 +23,18 @@ export default function Page() {
 
     return (
         <Pagina className="flex flex-col gap-10">
-            <Titulo icone={IconUser} principal="Colaboradores" segundario="Festa SL Alimentos 2024" />
+            <Titulo icone={IconUser} principal="Colaboradores" segundario="Festa SL Alimentos 2025" />
 
             {colaborador ? (
                 <FormularioColaborador
                     colaborador={colaborador}
+                    empresas={empresas}
                     onChange={alterarColaborador}
                     salvar={salvar}
                     criar={criar}
                     cancelar={() => alterarColaborador(null)}
                     excluir={excluir}
+                    excluirPremio={excluirPremio}
                 />
             ) : (
                 <>

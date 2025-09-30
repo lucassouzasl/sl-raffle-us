@@ -20,6 +20,9 @@ export default function LinhaColaborador(props: LinhaColaboradorProps) {
         if (empresa === "ND") {
             return "Nordeste"
         }
+        if (empresa === "SP") {
+            return "Sementes"
+        }
         return ""
     }
 

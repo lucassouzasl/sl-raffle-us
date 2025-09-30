@@ -5,20 +5,31 @@ import InputTexto from '../shared/InputTexto'
 import ReusableCheck from "../shared/ReusableCheck";
 import { IconTrash } from '@tabler/icons-react'
 import ListaPremio from '@/app/components/colaborador/ListaPremio'
-import useColaboladorPremio from '@/app/data/hooks/useColaboradorPremio'
+import MyReusableSelect from "@/app/components/shared/MyReusableSelect";
+import { useState } from "react";
+import { Empresa } from '@/core/model/Empresa';
 
 export interface FormularioColaboradorProps {
     colaborador: Partial<Colaborador>
+    empresas: Empresa[]
     onChange: (colaborador: Partial<Colaborador>) => void
     salvar: () => void
     criar: () => void
     cancelar: () => void
     excluir: () => void
+    excluirPremio: (colaboradorPremio: ColaboradorPremio) => void
 }
 
 export default function FormularioColaborador(props: FormularioColaboradorProps) {
 
-    const { excluirPremio } = useColaboladorPremio()
+    const [colabP, setColabP] = useState<ColaboradorPremio[]>(props.colaborador.premios || []);
+
+    const [empresa, setEmpresa] = useState(props.colaborador.empresa);
+
+    const empresas_tmp = props.empresas.map((item) => ({
+        value: item.empresa,
+        label: item.nome,
+    }));
 
     const handleClick = () => {
         props.onChange?.({ ...props.colaborador, observacao: '' })
@@ -26,6 +37,14 @@ export default function FormularioColaborador(props: FormularioColaboradorProps)
     const handleClickPremio = () => {
         props.onChange?.({ ...props.colaborador, premio: '' })
     }
+    const handleClickDelete = (id: number) => {
+        setColabP(colabP?.filter(x => x.id != id))
+    }
+    const handleEmpresa = (newValue: string) => {
+        setEmpresa(newValue)
+        props.onChange?.({ ...props.colaborador, empresa: newValue })
+    }
+
     return (
         <div className="flex flex-col gap-5">
             <div className="grid grid-cols-2 gap-5">
@@ -35,12 +54,15 @@ export default function FormularioColaborador(props: FormularioColaboradorProps)
                     value={props.colaborador.nome}
                     onChange={(e) => props.onChange?.({ ...props.colaborador, nome: e.target.value })}
                 />
-                <InputTexto
-                    label="Empresa"
-                    type="text"
-                    value={props.colaborador.empresa}
-                    onChange={(e) => props.onChange?.({ ...props.colaborador, empresa: e.target.value })}
-                />
+                <div>
+                    <MyReusableSelect
+                        label="Empresa"
+                        value={empresa!}
+                        onChange={(newValue) => handleEmpresa(newValue)}
+                        placeholder="Selecionar"
+                        options={empresas_tmp}
+                    />
+                </div>
             </div>
             <div className="grid grid-cols-5 gap-5">
                 <InputTexto
@@ -137,13 +159,10 @@ export default function FormularioColaborador(props: FormularioColaboradorProps)
                         Excluir
                     </button>) : ('')}
             </div>
-            {Array.isArray(props.colaborador.premios) && props.colaborador.premios?.length > 0 && (
-                <ListaPremio colaboradoresPremio={props.colaborador.premios} onClick={excluirPremio} />
+            {Array.isArray(colabP) && colabP?.length > 0 && (
+                <ListaPremio colaboradoresPremio={colabP} onClick={props.excluirPremio} onHandleClickDelete={handleClickDelete}/>
             )}
         </div>
     )
-}
-function useColaboladores(): { excluirPremio: any; } {
-    throw new Error('Function not implemented.');
 }
 

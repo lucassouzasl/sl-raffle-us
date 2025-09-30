@@ -1,13 +1,10 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  url      = env("DATABASE_URL")
   provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
 
 model Usuario {
@@ -50,6 +47,7 @@ model Empresa {
 model Premio {
   id                Int                 @id @default(autoincrement())
   nome              String              @default("")
+  empresa           String              @default("")
   observacao        String              @default("")
   tipo              Int                 @default(0)
   createdAt         DateTime            @default(now())
@@ -68,6 +66,6 @@ model ColaboradorPremio {
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @default(now())
   published     Boolean     @default(true)
-  colaborador   Colaborador @relation(fields: [colaboradorId], references: [id])
   premio        Premio      @relation(fields: [premioId], references: [id])
+  colaborador   Colaborador @relation(fields: [colaboradorId], references: [id])
 }

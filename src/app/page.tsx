@@ -9,7 +9,7 @@ export default function Home() {
       <Titulo
         icone={IconGift}
         principal="Início"
-        segundario="Festa SL Alimentos 2024"
+        segundario="Festa SL Alimentos 2025"
       />
     </Pagina>
   );

@@ -1,13 +1,13 @@
 import { ColaboradorPremio } from '@/core/model/ColaboradorPremio'
 import { IconTrash } from '@tabler/icons-react'
 
-export interface LinhaPremioProps {
+export interface LinhaColaboradorProps {
     colaboradorPremio: ColaboradorPremio
     onClick?: (colaboradorPremio: ColaboradorPremio) => void
     onHandleClickDelete: (id: number) => void
 }
 
-export default function LinhaPremio(props: LinhaPremioProps) {
+export default function LinhaColaborador(props: LinhaColaboradorProps) {
 
     const handleClick = () => {
         props.onClick?.(props.colaboradorPremio);
@@ -18,7 +18,7 @@ export default function LinhaPremio(props: LinhaPremioProps) {
         <div
             className="flex bg-green-900 items-center gap-5 p-4 rounded-md">
             <div className="flex flex-col">
-                <span className="text-xl font-black">{props.colaboradorPremio.premio?.nome}</span>
+                <span className="text-xl font-black">{props.colaboradorPremio.colaborador?.nome}</span>
                 <div className="flex flex-row items-end gap-3"></div>
             </div>
             <div className="flex flex-col">

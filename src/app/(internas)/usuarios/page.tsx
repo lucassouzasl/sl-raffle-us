@@ -12,7 +12,7 @@ export default function Page() {
 
     return (
         <Pagina className="flex flex-col gap-10">
-            <Titulo icone={IconUser} principal="Usuários" segundario="Festa SL Alimentos 2024" />
+            <Titulo icone={IconUser} principal="Usuários" segundario="Festa SL Alimentos 2025" />
 
             {usuario ? (
                 <FormularioUsuario

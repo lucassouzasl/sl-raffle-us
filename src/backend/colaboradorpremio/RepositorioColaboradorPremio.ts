@@ -5,15 +5,17 @@ export default class RepositorioEmpresa {
     private static db: PrismaClient = new PrismaClient()
 
     static async salvar(registro: ColaboradorPremio): Promise<ColaboradorPremio> {
+        const { colaborador, premio, ...colaboradorPData } = registro;
         return await this.db.colaboradorPremio.upsert({
             where: { id: registro.id },
-            update: registro,
-            create: registro,
+            update: colaboradorPData,
+            create: colaboradorPData,
         })
     }
 
     static async criar(registro: ColaboradorPremio): Promise<ColaboradorPremio> {
-        return await this.db.colaboradorPremio.create({ data: registro });
+        const { colaborador, premio, ...colaboradorPData } = registro;
+        return await this.db.colaboradorPremio.create({ data: colaboradorPData });
     }
 
     static async obterTodos(): Promise<ColaboradorPremio[]> {
@@ -28,7 +30,7 @@ export default class RepositorioEmpresa {
     }
 
     static async excluir(id: number): Promise<void> {
-        await this.db.colaborador.delete({
+        await this.db.colaboradorPremio.delete({
             where: { id },
         })
     }

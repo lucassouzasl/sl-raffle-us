@@ -96,7 +96,7 @@ export default function Page() {
 
   return (
     <Pagina className="flex flex-col gap-10">
-      <Titulo icone={IconTools} principal="Upload" segundario="Festa SL Alimentos 2024" />
+      <Titulo icone={IconTools} principal="Upload" segundario="Festa SL Alimentos 2025" />
       <>
       <div className="container">
         <div className="float-left"><UploadForm onFileUpload={processExcel} /></div>
