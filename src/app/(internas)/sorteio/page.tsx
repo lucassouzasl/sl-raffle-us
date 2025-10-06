@@ -14,8 +14,7 @@ import { Premio } from "@/core/model/Premio";
 import Link from "next/link";
 
 export default function Page() {
-
-  const WITHOUT_SUP = 1
+  const WITHOUT_SUP = 1;
 
   const raffle = useContext(RaffleContext);
 
@@ -25,7 +24,8 @@ export default function Page() {
 
   const [sorteado, setSorteado] = useState(false);
 
-  const { colaboradores, sortear, ganhador, newGanhador, livres } = useColaboladores();
+  const { colaboradores, sortear, ganhador, newGanhador, livres } =
+    useColaboladores();
 
   const [colabs, setColabs] = useState<Colaborador[]>([]);
 
@@ -34,43 +34,54 @@ export default function Page() {
   const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
   const handlePremio = async (newValue: string) => {
-    setSorteado(false)
-    const premioX = livres.find(item => item.id === parseInt(newValue));
-    setColabs(colaboradores.filter((item) => {
-      if (item.empresa == premioX?.empresa) {
-        if (Array.isArray(item.premios) && item.premios.length > 0) {
-          const premioZ = item.premios.find(item => item.premioId === parseInt(newValue));
-          if (!premioZ) {
+    setSorteado(false);
+    const premioX = livres.find((item) => item.id === parseInt(newValue));
+    setColabs(
+      colaboradores.filter((item) => {
+        if (item.empresa == premioX?.empresa) {
+          if (Array.isArray(item.premios) && item.premios.length > 0) {
+            const premioZ = item.premios.find(
+              (item) => item.premioId === parseInt(newValue)
+            );
+            if (!premioZ) {
+              return item;
+            }
+          } else {
             return item;
           }
-        } else {
-          return item;
         }
-      }
-    }));
+      })
+    );
     setPremio(newValue);
-  }
+  };
 
   const handleSortearNovamente = async () => {
-    const colabX = colaboradores.find(item => item.id === ganhador().id);
+    const colabX = colaboradores.find((item) => item.id === ganhador().id);
     if (colabX) {
       if (Array.isArray(colabX.premios) && colabX.premios.length > 0) {
-          const premioZ = colabX.premios.find(item => item.premioId === parseInt(premio));
-          console.log(colabX.id, premioZ?.id, premio);
+        const premioZ = colabX.premios.find(
+          (item) => item.premioId === parseInt(premio)
+        );
+        console.log(colabX.id, premioZ?.id, premio);
       }
     }
-  }
+  };
 
   const handleSorteio = async () => {
     setLoading(true);
     raffle.onChangeLoading(true);
     newGanhador();
     await delay(1000); //3000);
-    const premioX = livres.find(item => item.id === parseInt(premio));
-    sortear("" + premioX?.tipo || "0", premioX?.empresa || "", premio, WITHOUT_SUP);
-    setSorteado(true)
-    setPremio("")
-    setColabs([])
+    const premioX = livres.find((item) => item.id === parseInt(premio));
+    sortear(
+      "" + premioX?.tipo || "0",
+      premioX?.empresa || "",
+      premio,
+      WITHOUT_SUP
+    );
+    setSorteado(true);
+    setPremio("");
+    setColabs([]);
     setLoading(false);
     raffle.onChangeLoading(false);
   };
@@ -81,14 +92,14 @@ export default function Page() {
   }));
 
   const trataEmpresa = (empresa: string) => {
-    const resultado = empresas.find(item => item.empresa === empresa);
+    const resultado = empresas.find((item) => item.empresa === empresa);
     const nomeEncontrado = resultado ? resultado.nome : "";
     return nomeEncontrado;
-  }
+  };
 
   useEffect(() => {
-    //raffle.onChangeWinner(ganhador());
-  }, [ganhador, raffle]);
+    raffle.onChangeWinner(ganhador());
+  }, [ganhador()]);
 
   return (
     <Pagina className="flex flex-col gap-10">
@@ -107,35 +118,40 @@ export default function Page() {
           <div className="flex flex-col gap-10">
             <div className="mb-5">
               {premios_tmp.length > 0 && (
-              <MyReusableSelect
-                label="Prêmio"
-                value={premio}
-                onChange={(newValue) => handlePremio(newValue)}
-                placeholder="Prêmio"
-                options={premios_tmp}
-              />
+                <MyReusableSelect
+                  label="Prêmio"
+                  value={premio}
+                  onChange={(newValue) => handlePremio(newValue)}
+                  placeholder="Prêmio"
+                  options={premios_tmp}
+                />
               )}
               {premio.length <= 0 && premios_tmp.length > 0 && (
                 <div className="flex flex-col gap-3">
-                  <div className="text-sm text-yellow-400 ps-2 mt-2"><span>SELECIONE UM PRÊMIO!</span></div>
+                  <div className="text-sm text-yellow-400 ps-2 mt-2">
+                    <span>SELECIONE UM PRÊMIO!</span>
+                  </div>
                 </div>
               )}
             </div>
-              <div className="flex flex-col gap-3">
-                {colabs.length > 0 && premio.length > 0 && (
+            <div className="flex flex-col gap-3">
+              {colabs.length > 0 && premio.length > 0 && (
                 <>
-                <button
-                  className={`flex items-center gap-2 bg-gray-500 ${loading ? "opacity-80 cursor-wait" : ""
+                  <button
+                    className={`flex items-center gap-2 bg-gray-500 ${
+                      loading ? "opacity-80 cursor-wait" : ""
                     } px-4 py-2 rounded-md`}
-                  disabled={loading}
-                  onClick={() => handleSorteio()}
-                >
-                  <span>Sortear</span>
-                </button>
-                <div className="text-sm ps-2"><span>Falta(m) {colabs.length} colaborador(es)</span></div>
+                    disabled={loading}
+                    onClick={() => handleSorteio()}
+                  >
+                    <span>Sortear</span>
+                  </button>
+                  <div className="text-sm ps-2">
+                    <span>Falta(m) {colabs.length} colaborador(es)</span>
+                  </div>
                 </>
-                )}
-              </div>
+              )}
+            </div>
           </div>
         </div>
         <div className="w-full justify-items-center pt-20">
@@ -144,18 +160,24 @@ export default function Page() {
               <div className="flex items-center justify-center">
                 <div className="flex bg-zinc-900 items-center gap-5 p-4 rounded-md cursor-pointer">
                   <div className="flex flex-col">
-                    <span className="text-xl font-black">{ganhador().nome}</span>
-                    <span className="text-sm text-zinc-400">{ganhador().funcao}</span>
-                    <span className="text-sm text-zinc-400">{trataEmpresa(ganhador().empresa)}</span>
+                    <span className="text-xl font-black">
+                      {ganhador().nome}
+                    </span>
+                    <span className="text-sm text-zinc-400">
+                      {ganhador().funcao}
+                    </span>
+                    <span className="text-sm text-zinc-400">
+                      {trataEmpresa(ganhador().empresa)}
+                    </span>
                     {sorteado && (
-                    <div className="mt-3">
-                      <button
-                        className={`flex items-start gap-2 bg-yellow-400 px-1 py-1 rounded-md`}
-                        onClick={() => handleSortearNovamente()}
-                      >
-                        <IconReload />
-                      </button>
-                    </div>
+                      <div className="mt-3">
+                        <button
+                          className={`flex items-start gap-2 bg-yellow-400 px-1 py-1 rounded-md`}
+                          onClick={() => handleSortearNovamente()}
+                        >
+                          <IconReload />
+                        </button>
+                      </div>
                     )}
                   </div>
                 </div>

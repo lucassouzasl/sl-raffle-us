@@ -2,7 +2,7 @@ import React, { createContext, useEffect, useState } from "react";
 import { Colaborador } from "@/core/model/Colaborador";
 
 interface RaffleContextData {
-  winner:  Colaborador | null;
+  winner: Colaborador | null;
   isLoading: boolean;
   onChangeLoading: (value: boolean) => void;
   onChangeWinner: (winner: Colaborador) => void;
