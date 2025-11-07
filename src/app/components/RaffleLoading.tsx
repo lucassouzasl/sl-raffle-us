@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 export default function RaffleLoading() {
   const [colorIndex, setColorIndex] = useState(0);
-  const colors = ["#2B438F", "#c30050", "#1e1e1e"];
+  const colors = ["#ABBC74", "#A48151", "#1e1e1e"];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -44,9 +44,7 @@ export default function RaffleLoading() {
           </circle>
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className={`text-6xl font-black text-[${colors[colorIndex]}]`}>
-            SL
-          </span>
+          <span className={`text-6xl font-black text-slate-900`}>SL</span>
         </div>
       </div>
       <span className="text-black font-bold text-transform: uppercase mt-2">
