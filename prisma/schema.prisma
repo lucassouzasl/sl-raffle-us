@@ -28,6 +28,8 @@ model Colaborador {
   data       String              @default("")
   observacao String              @default("")
   premio     String              @default("")
+  telefone   String              @default("") @unique()
+  confirmedIn DateTime?
   createdAt  DateTime            @default(now())
   updatedAt  DateTime            @default(now())
   published  Boolean             @default(false)
@@ -49,6 +51,7 @@ model Premio {
   nome              String              @default("")
   empresa           String              @default("")
   observacao        String              @default("")
+  imagem            String              @default("")
   tipo              Int                 @default(0)
   createdAt         DateTime            @default(now())
   updatedAt         DateTime            @default(now())

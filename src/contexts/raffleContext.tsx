@@ -1,16 +1,20 @@
 import React, { createContext, useEffect, useState } from "react";
 import { Colaborador } from "@/core/model/Colaborador";
+import { Premio } from "@/core/model/Premio";
 
 interface RaffleContextData {
   winner: Colaborador | null;
   isLoading: boolean;
+  award: Premio | null;
   onChangeLoading: (value: boolean) => void;
-  onChangeWinner: (winner: Colaborador) => void;
+  onChangeWinner: (winner: Colaborador | null) => void;
+  onChangeAward: (award: Premio | null) => void;
 }
 
 const EVENTS = {
   UPDATE_WINNER: "UPDATE_WINNER",
   UPDATE_LOADING: "UPDATE_LOADING",
+  UPDATE_AWARD: "UPDATE_AWARD",
 };
 
 export const RaffleContext = createContext<RaffleContextData>(
@@ -21,6 +25,7 @@ export const RaffleProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [winner, setWinner] = useState<Colaborador | null>(null);
+  const [award, setAward] = useState<Premio | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const channel = new BroadcastChannel("raffle");
@@ -34,6 +39,9 @@ export const RaffleProvider: React.FC<{ children: React.ReactNode }> = ({
           break;
         case EVENTS.UPDATE_LOADING:
           setIsLoading(data.value);
+          break;
+        case EVENTS.UPDATE_AWARD:
+          setAward(data.value);
           break;
       }
 
@@ -51,7 +59,7 @@ export const RaffleProvider: React.FC<{ children: React.ReactNode }> = ({
     };
   }, []);
 
-  const onChangeWinner = (newValue: Colaborador) => {
+  const onChangeWinner = (newValue: Colaborador | null) => {
     setWinner(newValue);
     channel.postMessage({ type: EVENTS.UPDATE_WINNER, value: newValue });
   };
@@ -61,9 +69,21 @@ export const RaffleProvider: React.FC<{ children: React.ReactNode }> = ({
     channel.postMessage({ type: EVENTS.UPDATE_LOADING, value: newValue });
   };
 
+  const onChangeAward = (newValue: Premio | null) => {
+    setAward(newValue);
+    channel.postMessage({ type: EVENTS.UPDATE_AWARD, value: newValue });
+  };
+
   return (
     <RaffleContext.Provider
-      value={{ winner, onChangeWinner, isLoading, onChangeLoading }}
+      value={{
+        winner,
+        onChangeWinner,
+        isLoading,
+        onChangeLoading,
+        award,
+        onChangeAward,
+      }}
     >
       {children}
     </RaffleContext.Provider>

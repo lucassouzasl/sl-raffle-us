@@ -35,6 +35,7 @@ export default function Page() {
 
   const handlePremio = async (newValue: string) => {
     setSorteado(false);
+    raffle.onChangeWinner(null);
     const premioX = livres.find((item) => item.id === parseInt(newValue));
     setColabs(
       colaboradores.filter((item) => {
@@ -53,6 +54,9 @@ export default function Page() {
       })
     );
     setPremio(newValue);
+    raffle.onChangeAward(
+      livres.find((item) => item.id === parseInt(newValue)) || null
+    );
   };
 
   const handleSortearNovamente = async () => {
