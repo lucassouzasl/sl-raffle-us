@@ -12,10 +12,12 @@ import { ExternalLink } from "lucide-react";
 import { Colaborador } from "@/core/model/Colaborador";
 import { Premio } from "@/core/model/Premio";
 import Link from "next/link";
+import useColaboradorPremio from "@/app/data/hooks/useColaboradorPremio";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Page() {
   const WITHOUT_SUP = 1;
-
+  const router = useRouter();
   const raffle = useContext(RaffleContext);
 
   const [premio, setPremio] = useState("");
@@ -26,6 +28,7 @@ export default function Page() {
 
   const { colaboradores, sortear, ganhador, newGanhador, livres } =
     useColaboladores();
+  const { excluirPremioPorId } = useColaboradorPremio();
 
   const [colabs, setColabs] = useState<Colaborador[]>([]);
 
@@ -36,7 +39,16 @@ export default function Page() {
   const handlePremio = async (newValue: string) => {
     setSorteado(false);
     raffle.onChangeWinner(null);
+    handleColabs(newValue);
+    setPremio(newValue);
+    raffle.onChangeAward(
+      livres.find((item) => item.id === parseInt(newValue)) || null
+    );
+  };
+
+  const handleColabs = async (newValue: string) => {
     const premioX = livres.find((item) => item.id === parseInt(newValue));
+
     setColabs(
       colaboradores.filter((item) => {
         if (item.empresa == premioX?.empresa) {
@@ -53,22 +65,14 @@ export default function Page() {
         }
       })
     );
-    setPremio(newValue);
-    raffle.onChangeAward(
-      livres.find((item) => item.id === parseInt(newValue)) || null
-    );
   };
 
   const handleSortearNovamente = async () => {
-    const colabX = colaboradores.find((item) => item.id === ganhador().id);
-    if (colabX) {
-      if (Array.isArray(colabX.premios) && colabX.premios.length > 0) {
-        const premioZ = colabX.premios.find(
-          (item) => item.premioId === parseInt(premio)
-        );
-        console.log(colabX.id, premioZ?.id, premio);
-      }
-    }
+    await excluirPremioPorId(ganhador().id);
+    router.push(`/sorteio?premioId=${premio}`);
+
+    await delay(500);
+    window.location.reload();
   };
 
   const handleSorteio = async () => {
@@ -84,7 +88,6 @@ export default function Page() {
       WITHOUT_SUP
     );
     setSorteado(true);
-    setPremio("");
     setColabs([]);
     setLoading(false);
     raffle.onChangeLoading(false);
@@ -177,7 +180,11 @@ export default function Page() {
                       <div className="mt-3">
                         <button
                           className={`flex items-start gap-2 bg-yellow-400 px-1 py-1 rounded-md`}
-                          onClick={() => handleSortearNovamente()}
+                          onClick={() => {
+                            if (confirm("remover colaborador sorteado?")) {
+                              handleSortearNovamente();
+                            }
+                          }}
                         >
                           <IconReload />
                         </button>

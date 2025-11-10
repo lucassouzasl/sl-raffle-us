@@ -55,7 +55,7 @@ export default class RepositorioColaborador {
         },
       },
       where: {
-        premios: { none: {} }
+        premios: { none: {} },
       },
     });
   }
@@ -70,7 +70,7 @@ export default class RepositorioColaborador {
         },
       },
       where: {
-        premios: { some: {} },        
+        premios: { some: {} },
       },
     });
   }
@@ -93,36 +93,36 @@ export default class RepositorioColaborador {
 
   static async resumoGanhou(): Promise<Resumo[]> {
     const retorno = await this.db.colaborador.groupBy({
-      by: ['empresa'],
+      by: ["empresa"],
       where: {
         premios: { some: {} },
       },
       _count: {
-        empresa: true
+        empresa: true,
       },
       orderBy: {
-        empresa: 'asc',
+        empresa: "asc",
       },
-    })
-    return retorno
+    });
+    return retorno;
   }
 
   static async resumoExtra(): Promise<Resumo[]> {
     const retorno = await this.db.colaborador.groupBy({
-      by: ['empresa'],
+      by: ["empresa"],
       where: {
         premio: {
-          contains: 'EXTRA',
+          contains: "EXTRA",
         },
       },
       _count: {
-        empresa: true
+        empresa: true,
       },
       orderBy: {
-        empresa: 'asc',
+        empresa: "asc",
       },
-    })
-    return retorno
+    });
+    return retorno;
   }
 
   static async obterPorId(id: number): Promise<Colaborador> {

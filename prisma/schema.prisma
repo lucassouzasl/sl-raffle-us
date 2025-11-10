@@ -28,7 +28,7 @@ model Colaborador {
   data       String              @default("")
   observacao String              @default("")
   premio     String              @default("")
-  telefone   String              @default("") @unique()
+  telefone   String              @default("") 
   confirmedIn DateTime?
   createdAt  DateTime            @default(now())
   updatedAt  DateTime            @default(now())

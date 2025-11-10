@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { Premio } from "@/core/model/Premio";
 
 export default function useColaboradores() {
-
   const [mensagem, setMensagem] = useState<String>("");
   const [icont, setIcont] = useState<number>(0);
   const [ganhador, setGanhador] = useState<Colaborador>(<Colaborador>{});
@@ -20,7 +19,7 @@ export default function useColaboradores() {
   );
   const [selecionados, setSelecionados] = useState<Partial<Colaborador>[]>([]);
   const [colabs, setColabs] = useState<Colaborador[]>([]);
-  const [livres, setLivres] = useState<Premio[]>([])
+  const [livres, setLivres] = useState<Premio[]>([]);
 
   useEffect(() => {
     Backend.colaboladores.obter().then(setColaboradores);
@@ -60,55 +59,47 @@ export default function useColaboradores() {
     setLivres(livres);
   }
 
-  async function sortear(tipo: string, empresa: string, premio: string, supervisor: number) {
+  async function sortear(
+    tipo: string, // atualmente não muda o fluxo
+    empresa: string,
+    premio: string,
+    supervisor: number // atualmente não usado
+  ) {
+    try {
+      const premioId = Number(premio);
 
-    let id: number = 0,
-      nome: string = "",
-      min: number = 1,
-      max: number = 0,
-      random: number = 0,
-      icont: number = 0;
+      const elegiveis = colaboradores.filter(
+        (c: Colaborador) =>
+          c.empresa === empresa &&
+          (!Array.isArray(c.premios) ||
+            c.premios.length === 0 ||
+            !c.premios.some((p) => p.premioId === premioId))
+      );
 
-    const colabs = colaboradores.filter((item) => {
-      if (item.empresa == empresa) {
-        if (Array.isArray(item.premios) && item.premios.length > 0) {
-          const premioZ = item.premios.find(item => item.premioId === parseInt(premio));
-          if (premioZ) {
-            return item;
-          }
-        } else {
-          return item;
-        }
+      if (elegiveis.length === 0) {
+        setGanhador({} as Colaborador);
+        console.warn("Nenhum colaborador elegível para este prêmio.");
+        return;
       }
-    });
 
-    max = colabs.length - 1,
-    random = Math.floor(Math.random() * (+max - +min) + +min),
+      const idx = Math.floor(Math.random() * elegiveis.length);
+      const vencedor = elegiveis[idx];
 
-    setGanhador(<Colaborador>{});
-    colabs.map((colaborador: Colaborador) => {
-      if (icont == random) {
-        nome = colaborador.nome;
-        id = colaborador.id;
-        console.log(colaborador);
-        setGanhador(colaborador);
-      }
-      icont += 1;
-    });
+      setGanhador(vencedor);
 
-    if (icont > 0) {
-      if (tipo == "0") {
-        //await Backend.colaboladores.salvar({ id: id, observacao: "GANHOU" });
-        await Backend.colaboradorPremios.criar({ colaboradorId: id, premioId: parseInt(premio) })
-      } else {
-        //await Backend.colaboladores.salvar({ id: id, premio: "EXTRA" });
-        await Backend.colaboradorPremios.criar({ colaboradorId: id, premioId: parseInt(premio) })
-      }
-      const colaboradores = await Backend.colaboladores.obter();
-      setColaboradores(colaboradores);
+      await Backend.colaboradorPremios.criar({
+        colaboradorId: vencedor.id,
+        premioId,
+      });
+
+      const listaColabs = await Backend.colaboladores.obter();
+      setColaboradores(listaColabs);
       setColaborador(null);
-      const livres = await Backend.premios.livres().then();
+
+      const livres = await Backend.premios.livres();
       setLivres(livres);
+    } catch (err) {
+      console.error("Erro no sorteio:", err);
     }
   }
 
@@ -151,7 +142,7 @@ export default function useColaboradores() {
     if (!colaboradorPremio || !colaboradorPremio.id) return;
     await Backend.colaboradorPremios.excluir(colaboradorPremio.id);
     const colaboradores = await Backend.colaboladores.obter();
-    setColaboradores(colaboradores); 
+    setColaboradores(colaboradores);
   }
 
   async function excluirTodos() {
@@ -159,6 +150,11 @@ export default function useColaboradores() {
     const colaboradores = await Backend.colaboladores.obter();
     setColaboradores(colaboradores);
     setColaborador(null);
+  }
+
+  async function getLivres() {
+    const result = await Backend.premios.livres();
+    setLivres(result);
   }
 
   return {
@@ -195,6 +191,7 @@ export default function useColaboradores() {
     ganhador: () => {
       return ganhador;
     },
+    getLivres,
     newGanhador: () => {
       setGanhador(<Colaborador>{});
     },
